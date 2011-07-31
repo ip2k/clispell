@@ -17,6 +17,7 @@ Jeweler::Tasks.new do |gem|
   gem.name = "clispell"
   gem.add_dependency 'dmarkow-raspell'
   gem.add_dependency 'mattscilipoti-rdialog'
+  gem.add_dependency 'oald_parser'
   gem.executables = ['clispell']
   gem.homepage = "http://github.com/ip2k/clispell"
   gem.license = "Creative Commons by-nc-sa"

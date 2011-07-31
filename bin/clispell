@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'raspell'
 require 'mattscilipoti-rdialog'
+require 'oald_parser'
 
 # helper method for instantiating our ASpell API...
 # using this, you only have to configure it in one spot.
@@ -19,6 +20,12 @@ def new_dialog()
     dialog.nocancel = true
     dialog.shadow = false
     return dialog
+end
+
+# look up a word in the Oxford Advanced Learners Dictionary
+def define_word(someword)
+    facade = OaldParser::Facade.create_configured_instance
+    return facade.describe(str: someword)
 end
 
 # our method to see if a word is spelled correctly
@@ -44,6 +51,10 @@ def show_suggestion_array(suggestions)
     return new_dialog.menu("Suggested spellings are below.  Select one to view the definition.", suggestions)
 end
 
+def show_definition(definition)
+    return new_dialog.msgbox(definition)
+end
+
 # if the user didn't pass any args, abort and let them know that they need to.
 if ARGV.first.nil?
     abort("You must specify a word that you want to spell check or define")
@@ -59,6 +70,9 @@ else
 
         # call our show_suggestion_array method with the array-of-arrays.
         user_selection_string = show_suggestion_array(suggestions_array)
+        definition = define_word(user_selection_string)
+        show_definition(definition)
+
         #puts user_selection_string
         exit(0)
     end
