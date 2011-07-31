@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{clispell}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["ip2k"]
   s.date = %q{2011-07-31}
   s.default_executable = %q{clispell}
-  s.description = %q{clispell provides an easy-to-use CLI that harnesses ASpell and delivers pretty word info FAST right to your terminal}
+  s.description = %q{clispell provides an easy-to-use CLI that harnesses ASpell the Oxford Advanced Learner's Dictionary and delivers pretty word info FAST right to your terminal}
   s.email = %q{github@seanp2k.endjunk.com}
   s.executables = ["clispell"]
   s.extra_rdoc_files = [
