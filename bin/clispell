@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require 'raspell'
-require 'pp'
-require "mattscilipoti-rdialog"
+require 'mattscilipoti-rdialog'
 
 # helper method for instantiating our ASpell API...
 # using this, you only have to configure it in one spot.
