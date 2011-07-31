@@ -28,7 +28,8 @@ Gem::Specification.new do |s|
     "VERSION",
     "bin/clispell",
     "bin/clispell.rb",
-    "bin/test.rb"
+    "bin/test.rb",
+    "clispell.gemspec"
   ]
   s.homepage = %q{http://github.com/ip2k/clispell}
   s.licenses = ["Creative Commons by-nc-sa"]
