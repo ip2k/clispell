@@ -27,8 +27,6 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/clispell",
-    "bin/clispell.rb",
-    "bin/test.rb",
     "clispell.gemspec"
   ]
   s.homepage = %q{http://github.com/ip2k/clispell}
