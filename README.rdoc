@@ -1,6 +1,11 @@
 = clispell
 
-Description goes here.
+clispell is a simple spell checker that you use right off the command line.  Try it:
+clispell someword
+
+If you're spelling it right, it'll tell you.  If not, it'll offer you a list of possible spellings.
+
+Planned feature for the future: looking up the definition of any of the words.
 
 == Contributing to clispell
  

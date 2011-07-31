@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+require 'raspell'
+require 'pp'
+require "mattscilipoti-rdialog"
+
+# helper method for instantiating our ASpell API...
+# using this, you only have to configure it in one spot.
+def new_speller()
+    # instantiate our speller and set the dict to en_US (English - United States) and ignore cAsE.
+    speller = Aspell.new("en_US")
+    speller.set_option("ignore-case", "true")
+    return speller
+end
+
+# helper method for instantiating our dialog API...
+# using this, you only have to configure it in one spot.
+def new_dialog()
+    # instantiate our dialog and set some options
+    dialog = RDialog.new
+    dialog.nocancel = true
+    dialog.shadow = false
+    return dialog
+end
+
+# our method to see if a word is spelled correctly
+def check_spelling(someword)
+    myspeller = new_speller()
+    # test [someword] for spelling error and return true if it's correct.
+    if myspeller.check(someword)
+        return true
+    else
+        return false
+    end
+end
+
+def get_suggestions(someword)
+    myspeller = new_speller()
+    return myspeller.suggest(someword)
+end
+
+def show_suggestion_array(suggestions)
+    # use our new_dialog helper method and call the menu() method on it...
+    # ...with our fancy text and suggestions array, then...
+    # ...block until the user picks something and return what they picked.
+    return new_dialog.menu("Suggested spellings are below.  Select one to view the definition.", suggestions)
+end
+
+# if the user didn't pass any args, abort and let them know that they need to.
+if ARGV.first.nil?
+    abort("You must specify a word that you want to spell check or define")
+else
+    if check_spelling(ARGV.first)
+        abort("#{ARGV.first} is spelled correctly.")
+    else
+        suggestions_array = get_suggestions(ARGV.first)
+
+        # convert suggestions into an array of single-item arrays...
+        # so that dialog doesn't think we want to display each chr.
+        suggestions_array.map! { |s| [s] }
+
+        # call our show_suggestion_array method with the array-of-arrays.
+        user_selection_string = show_suggestion_array(suggestions_array)
+        #puts user_selection_string
+        exit(0)
+    end
+end
