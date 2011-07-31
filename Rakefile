@@ -22,7 +22,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/ip2k/clispell"
   gem.license = "Creative Commons by-nc-sa"
   gem.summary = "Simple spell checking and definitions right in your terminal"
-  gem.description = "clispell provides an easy-to-use CLI that harnesses ASpell and delivers pretty word info FAST right to your terminal"
+  gem.description = "clispell provides an easy-to-use CLI that harnesses ASpell the Oxford Advanced Learner's Dictionary and delivers pretty word info FAST right to your terminal"
   gem.email = "github@seanp2k.endjunk.com"
   gem.authors = ["ip2k"]
   # dependencies defined in Gemfile
