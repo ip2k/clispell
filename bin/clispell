@@ -44,11 +44,11 @@ def get_suggestions(someword)
     return myspeller.suggest(someword)
 end
 
-def show_suggestion_array(suggestions)
+def show_suggestion_array(orig_word,suggestions)
     # use our new_dialog helper method and call the menu() method on it...
     # ...with our fancy text and suggestions array, then...
     # ...block until the user picks something and return what they picked.
-    return new_dialog.menu("Suggested spellings are below.  Select one to view the definition.", suggestions)
+    return new_dialog.menu("#{orig_word} not found or spelled incorrectly.  Select a word below view the definition.", suggestions)
 end
 
 def show_definition(definition)
@@ -59,9 +59,15 @@ end
 if ARGV.first.nil?
     abort("You must specify a word that you want to spell check or define")
 else
+    # if the user spelled the word right, just show the definition...
+    # and tell them they were right while we're waiting on the API.
     if check_spelling(ARGV.first)
-        abort("#{ARGV.first} is spelled correctly.")
+        puts "#{ARGV.first} is spelled correctly, waiting for the definition (requires internet access)..."
+        definition = define_word(ARGV.first)
+        show_definition("#{ARGV.first}:\n#{definition}")
+        exit(0)
     else
+        # get possible words if the user sends us a typo'd word.
         suggestions_array = get_suggestions(ARGV.first)
 
         # convert suggestions into an array of single-item arrays...
@@ -69,11 +75,9 @@ else
         suggestions_array.map! { |s| [s] }
 
         # call our show_suggestion_array method with the array-of-arrays.
-        user_selection_string = show_suggestion_array(suggestions_array)
+        user_selection_string = show_suggestion_array(ARGV.first, suggestions_array)
         definition = define_word(user_selection_string)
-        show_definition(definition)
-
-        #puts user_selection_string
+        show_definition("#{user_selection_string}:\n#{definition}")
         exit(0)
     end
 end
