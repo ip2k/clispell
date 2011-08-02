@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{clispell}
-  s.version = "0.2.2"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["ip2k"]
-  s.date = %q{2011-07-31}
+  s.date = %q{2011-08-01}
   s.default_executable = %q{clispell}
   s.description = %q{clispell provides an easy-to-use CLI that harnesses ASpell the Oxford Advanced Learner's Dictionary and delivers pretty word info FAST right to your terminal}
   s.email = %q{github@seanp2k.endjunk.com}
@@ -27,7 +27,8 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/clispell",
-    "clispell.gemspec"
+    "clispell.gemspec",
+    "lib/clipboard_example.rb"
   ]
   s.homepage = %q{http://github.com/ip2k/clispell}
   s.licenses = ["Creative Commons by-nc-sa"]
@@ -46,6 +47,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<dmarkow-raspell>, [">= 0"])
       s.add_runtime_dependency(%q<mattscilipoti-rdialog>, [">= 0"])
       s.add_runtime_dependency(%q<oald_parser>, [">= 0"])
+      s.add_runtime_dependency(%q<clipboard>, [">= 0"])
     else
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
@@ -54,6 +56,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<dmarkow-raspell>, [">= 0"])
       s.add_dependency(%q<mattscilipoti-rdialog>, [">= 0"])
       s.add_dependency(%q<oald_parser>, [">= 0"])
+      s.add_dependency(%q<clipboard>, [">= 0"])
     end
   else
     s.add_dependency(%q<shoulda>, [">= 0"])
@@ -63,6 +66,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<dmarkow-raspell>, [">= 0"])
     s.add_dependency(%q<mattscilipoti-rdialog>, [">= 0"])
     s.add_dependency(%q<oald_parser>, [">= 0"])
+    s.add_dependency(%q<clipboard>, [">= 0"])
   end
 end
 
