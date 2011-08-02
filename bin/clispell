@@ -1,12 +1,39 @@
 #!/usr/bin/env ruby
+# ---- REQUIRED GEMS ----
 require 'raspell'
 require 'mattscilipoti-rdialog'
 require 'oald_parser'
 
+# ---- FLAGS AND GLOBAL VARS ----
+
+# set this to true if we want to automatically copy the...
+# ...correctly spelled word to the clipboard.
+# NOTE: Requires the 'xclip' binary on Linux.
+$enable_copy_to_clipboard = true
+
+# ---- INIT LOGIC ----
+
+# if we're enabling the clipboard functionality, require the 'clipboard' gem.
+if $enable_copy_to_clipboard
+    require 'clipboard'
+    # if we're running on Linux, make sure that 'xclip' is available...
+    # ...and quit if it isn't since clipboard won't work without it.
+    if RUBY_PLATFORM.include?("linux")
+        xclip = `which xclip`.strip
+        if xclip.empty?
+            abort("You need the 'xclip' binary for copy-to-clipboard functionality to work properly under Linux")
+        end
+    end
+end
+
+
+# ---- METHODS ----
+
 # helper method for instantiating our ASpell API...
 # using this, you only have to configure it in one spot.
 def new_speller()
-    # instantiate our speller and set the dict to en_US (English - United States) and ignore cAsE.
+    # instantiate our speller and set the dict to en_US...
+    # ...(English - United States) and ignore cAsE.
     speller = Aspell.new("en_US")
     speller.set_option("ignore-case", "true")
     return speller
@@ -15,7 +42,8 @@ end
 # helper method for instantiating our dialog API...
 # using this, you only have to configure it in one spot.
 def new_dialog()
-    # instantiate our dialog and set some options
+    # instantiate our dialog and set some options...
+    # ...then return it as an object
     dialog = RDialog.new
     dialog.nocancel = true
     dialog.shadow = false
@@ -24,11 +52,14 @@ end
 
 # look up a word in the Oxford Advanced Learners Dictionary
 def define_word(someword)
+    # use the Facade interface from the oald_parser gem...
+    # ...which does the scraping / parsing for us.
+    puts "Waiting for the definition of #{someword} (requires internet access)..."
     facade = OaldParser::Facade.create_configured_instance
     return facade.describe(str: someword)
 end
 
-# our method to see if a word is spelled correctly
+# check the spelling of a word and return boolean.
 def check_spelling(someword)
     myspeller = new_speller()
     # test [someword] for spelling error and return true if it's correct.
@@ -39,21 +70,36 @@ def check_spelling(someword)
     end
 end
 
+# copy [something] to the clipboard (works on OSX/Linux/Win)...
+# ...if we have the flag set to enable that.
+def copy_to_clipboard(something)
+    if $enable_copy_to_clipboard
+        Clipboard.copy(something)
+        puts "Copied #{something} to the clipboard."
+    end
+end
+
+# get an array of possible corrections.
 def get_suggestions(someword)
     myspeller = new_speller()
     return myspeller.suggest(someword)
 end
 
+# show a dialog menu with all the possible corrections
 def show_suggestion_array(orig_word,suggestions)
     # use our new_dialog helper method and call the menu() method on it...
     # ...with our fancy text and suggestions array, then...
     # ...block until the user picks something and return what they picked.
-    return new_dialog.menu("#{orig_word} not found or spelled incorrectly.  Select a word below view the definition.", suggestions)
+    return new_dialog.menu("#{orig_word} not found or spelled incorrectly.\nSelect a word below view the definition.", suggestions)
 end
 
+# show a dialog box with the definition.
 def show_definition(definition)
     return new_dialog.msgbox(definition)
 end
+
+
+# ---- MAIN ----
 
 # if the user didn't pass any args, abort and let them know that they need to.
 if ARGV.first.nil?
@@ -62,9 +108,14 @@ else
     # if the user spelled the word right, just show the definition...
     # and tell them they were right while we're waiting on the API.
     if check_spelling(ARGV.first)
-        puts "#{ARGV.first} is spelled correctly, waiting for the definition (requires internet access)..."
+
+        # if we're copying stuff to the clipboard, copy the correct spelling.
+        copy_to_clipboard(ARGV.first)
+        puts "#{ARGV.first} is spelled correctly."
+
+        # get and display the definition, then end.
         definition = define_word(ARGV.first)
-        show_definition("#{ARGV.first}:\n#{definition}")
+        show_definition("#{ARGV.first} is spelled correctly.\n\n#{ARGV.first}:\n#{definition}")
         exit(0)
     else
         # get possible words if the user sends us a typo'd word.
@@ -76,6 +127,11 @@ else
 
         # call our show_suggestion_array method with the array-of-arrays.
         user_selection_string = show_suggestion_array(ARGV.first, suggestions_array)
+
+        # if we're copying stuff to the clipboard, copy what the user picks.
+        copy_to_clipboard(user_selection_string)
+
+        # get and display the definition of the word the user picks, then end.
         definition = define_word(user_selection_string)
         show_definition("#{user_selection_string}:\n#{definition}")
         exit(0)
